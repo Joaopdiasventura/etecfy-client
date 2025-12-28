@@ -1,0 +1,142 @@
+@if (isOpen) {
+<div class="profile-panel animate-fade-in">
+  <div class="profile-panel__drawer animate-slide-in">
+    <div class="profile-panel__header">
+      <div class="profile-panel__identity">
+        <div class="profile-panel__avatar">
+          <img
+            class="icon-img"
+            src="icons/user.svg"
+            width="20"
+            height="20"
+            alt=""
+            aria-hidden="true"
+          />
+        </div>
+        <div>
+          <h2 class="font-display">{{ currentUser.name }}</h2>
+          <p>{{ currentUser.email }}</p>
+        </div>
+      </div>
+      <app-button variant="icon" size="icon" (click)="close.emit()" aria-label="Fechar">
+        <img class="icon-img" src="icons/x.svg" width="20" height="20" alt="" aria-hidden="true" />
+      </app-button>
+    </div>
+
+    <div class="profile-panel__content scrollbar-thin">
+      @if (error()) {
+      <custom-alert type="error" [message]="error()!" (close)="error.set(null)" />
+      } @if (success()) {
+      <custom-alert type="success" [message]="success()!" (close)="success.set(null)" />
+      }
+
+      <form class="profile-panel__form" (submit)="updateProfile($event)">
+        <h3 class="profile-panel__section-title font-display">
+          <img
+            class="icon-img"
+            src="icons/settings.svg"
+            width="16"
+            height="16"
+            alt=""
+            aria-hidden="true"
+          />
+          Editar perfil
+        </h3>
+
+        <label class="profile-panel__field">
+          <span>Nome</span>
+          <app-input
+            [value]="updateUserDorm.name().value()"
+            icon="user"
+            (valueChange)="updateUserDorm.name().value.set($event)"
+            [disabled]="isLoading()"
+          />
+        </label>
+
+        <label class="profile-panel__field">
+          <span>E-mail</span>
+          <app-input
+            type="email"
+            [value]="updateUserDorm.email().value()"
+            icon="mail"
+            (valueChange)="updateUserDorm.email().value.set($event)"
+            [disabled]="isLoading()"
+          />
+        </label>
+
+        <label class="profile-panel__field">
+          <span>Nova senha (opcional)</span>
+          <app-input
+            type="password"
+            placeholder="Deixe em branco para manter"
+            [value]="updateUserDorm.password().value()"
+            icon="lock"
+            (valueChange)="updateUserDorm.password().value.set($event)"
+            [disabled]="isLoading()"
+          />
+        </label>
+
+        <app-button type="submit" className="profile-panel__save" [loading]="isLoading()">
+          <img
+            class="icon-img"
+            src="icons/save.svg"
+            width="16"
+            height="16"
+            alt=""
+            aria-hidden="true"
+          />
+          Salvar alterações
+        </app-button>
+      </form>
+
+      <div class="profile-panel__actions">
+        <h3 class="profile-panel__section-title font-display">Ações da conta</h3>
+        <app-button variant="outline" className="profile-panel__action" (click)="logout()">
+          <img
+            class="icon-img"
+            src="icons/log-out.svg"
+            width="16"
+            height="16"
+            alt=""
+            aria-hidden="true"
+          />
+          Sair da conta
+        </app-button>
+        <app-button
+          variant="destructive"
+          className="profile-panel__action"
+          (click)="showDeleteConfirm.set(true)"
+        >
+          <img
+            class="icon-img"
+            src="icons/trash-2.svg"
+            width="16"
+            height="16"
+            alt=""
+            aria-hidden="true"
+          />
+          Excluir conta
+        </app-button>
+      </div>
+    </div>
+  </div>
+
+  @if (showDeleteConfirm()) {
+  <div class="profile-panel__dialog">
+    <div class="profile-panel__dialog-content">
+      <h3 class="font-display">Excluir conta</h3>
+      <p>
+        Esta ação é irreversível. Todos os seus dados serão permanentemente removidos. Tem certeza
+        que deseja continuar?
+      </p>
+      <div class="profile-panel__dialog-actions">
+        <app-button variant="outline" (click)="showDeleteConfirm.set(false)">Cancelar</app-button>
+        <app-button variant="destructive" (click)="confirmDelete()" [loading]="isLoading()">
+          Sim, excluir minha conta
+        </app-button>
+      </div>
+    </div>
+  </div>
+  }
+</div>
+}

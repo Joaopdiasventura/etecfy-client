@@ -1,0 +1,22 @@
+<button
+  type="button"
+  class="song-card"
+  [class.song-card--active]="isActive"
+  (click)="select.emit()"
+>
+  <div class="song-card__cover">
+    <img [src]="song.thumbnail" [alt]="'Capa de ' + song.title" loading="lazy" />
+    <div class="song-card__overlay" [class.song-card__overlay--active]="isActive">
+      <img class="icon-img" src="icons/play.svg" width="24" height="24" alt="" aria-hidden="true" />
+    </div>
+  </div>
+
+  <div class="song-card__info">
+    <h3 class="song-card__title" [class.song-card__title--active]="isActive">
+      {{ song.title }}
+    </h3>
+    <p class="song-card__artist">{{ song.artist }}</p>
+  </div>
+
+  <span class="song-card__duration">{{ formatDuration(song.duration) }}</span>
+</button>

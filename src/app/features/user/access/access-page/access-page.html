@@ -1,0 +1,281 @@
+<div class="access-shell">
+  <section class="form-panel">
+    <div class="form-card">
+      <div class="mobile-header fade-in-up">
+        <h2>{{ mobileTitle() }}</h2>
+        <p>{{ mobileSubtitle() }}</p>
+      </div>
+
+      <div class="desktop-header fade-in-up">
+        <h2>{{ desktopTitle() }}</h2>
+        <p>{{ desktopSubtitle() }}</p>
+      </div>
+
+      <div
+        class="tabs fade-in-up"
+        role="tablist"
+        [style.animationDelay]="'100ms'"
+        [class.is-signup]="activeTab() === 'signup'"
+      >
+        <span class="tab-indicator" aria-hidden="true"></span>
+        <button
+          type="button"
+          role="tab"
+          class="tab-button"
+          [class.active]="activeTab() === 'login'"
+          [attr.aria-selected]="activeTab() === 'login'"
+          (click)="setActiveTab('login')"
+        >
+          Entrar
+        </button>
+        <button
+          type="button"
+          role="tab"
+          class="tab-button"
+          [class.active]="activeTab() === 'signup'"
+          [attr.aria-selected]="activeTab() === 'signup'"
+          (click)="setActiveTab('signup')"
+        >
+          Criar conta
+        </button>
+      </div>
+
+      <div class="form-viewport">
+        <div class="form-slider" [class.is-signup]="activeTab() === 'signup'">
+          <form
+            class="auth-form"
+            (submit)="onSubmit($event, true)"
+            novalidate
+            [attr.aria-hidden]="activeTab() === 'signup'"
+          >
+            <div class="field">
+              <label for="login-email">E-mail</label>
+              <div class="input-wrap">
+                <input
+                  id="login-email"
+                  type="email"
+                  placeholder="seu@email.com"
+                  autocomplete="email"
+                  [field]="loginUserForm.email"
+                  [class.error]="
+                    loginUserForm.email().errors().length && loginUserForm.email().touched()
+                  "
+                  [attr.aria-invalid]="
+                    loginUserForm.email().errors().length && loginUserForm.email().touched()
+                      ? 'true'
+                      : 'false'
+                  "
+                  [attr.aria-describedby]="
+                    loginUserForm.email().errors().length && loginUserForm.email().touched()
+                      ? 'login-email-error'
+                      : null
+                  "
+                />
+              </div>
+              @if (loginUserForm.email().errors().length && loginUserForm.email().touched()) {
+              <div class="field-error fade-in" id="login-email-error" role="alert">
+                @for (error of loginUserForm.email().errors(); track error.kind) {
+                <p>{{ error.message || 'Campo invalido' }}</p>
+                }
+              </div>
+              }
+            </div>
+
+            <div class="field">
+              <label for="login-password">Senha</label>
+              <div class="input-wrap">
+                <input
+                  id="login-password"
+                  [type]="showLoginPassword() ? 'text' : 'password'"
+                  [placeholder]="showLoginPassword() ? 'sua senha' : '********'"
+                  autocomplete="current-password"
+                  [field]="loginUserForm.password"
+                  [class.error]="
+                    loginUserForm.password().errors().length &&
+                    loginUserForm.password().touched() &&
+                    loginUserForm.password().touched()
+                  "
+                  [attr.aria-invalid]="
+                    loginUserForm.password().errors().length &&
+                    loginUserForm.password().touched() &&
+                    loginUserForm.password().touched()
+                      ? 'true'
+                      : 'false'
+                  "
+                  [attr.aria-describedby]="
+                    loginUserForm.password().errors().length &&
+                    loginUserForm.password().touched() &&
+                    loginUserForm.password().touched()
+                      ? 'login-password-error'
+                      : null
+                  "
+                />
+                <button
+                  type="button"
+                  class="toggle-password"
+                  [attr.aria-label]="showLoginPassword() ? 'Ocultar senha' : 'Mostrar senha'"
+                  (click)="toggleLoginPassword()"
+                  [disabled]="isLoading()"
+                >
+                  <img [src]="showLoginPassword() ? 'icons/eye-off.svg' : 'icons/eye.svg'" alt="" />
+                </button>
+              </div>
+
+              @if (loginUserForm.password().errors().length && loginUserForm.password().touched() &&
+              loginUserForm.password().touched()) {
+              <div class="field-error fade-in" id="login-password-error" role="alert">
+                @for (error of loginUserForm.password().errors(); track error.kind) {
+                <p>{{ error.message || 'Campo invalido' }}</p>
+                }
+              </div>
+              }
+            </div>
+
+            @if (errorMessage()) {
+            <div class="form-alert fade-in" role="alert">
+              <p>{{ errorMessage() }}</p>
+            </div>
+            }
+
+            <button class="submit-button" type="submit" [disabled]="!canSubmitLogin()">
+              @if (isLoading()) {
+              <span class="spinner" aria-hidden="true"></span>
+              Entrando... } @else { Entrar }
+            </button>
+          </form>
+
+          <form
+            class="auth-form"
+            (submit)="onSubmit($event, false)"
+            novalidate
+            [attr.aria-hidden]="activeTab() === 'login'"
+          >
+            <div class="field">
+              <label for="signup-name">Nome</label>
+              <div class="input-wrap">
+                <input
+                  id="signup-name"
+                  type="text"
+                  placeholder="Seu nome completo"
+                  autocomplete="name"
+                  [field]="createUserForm.name"
+                  [class.error]="
+                    createUserForm.name().errors().length && createUserForm.name().touched()
+                  "
+                  [attr.aria-invalid]="
+                    createUserForm.name().errors().length && createUserForm.name().touched()
+                      ? 'true'
+                      : 'false'
+                  "
+                  [attr.aria-describedby]="
+                    createUserForm.name().errors().length && createUserForm.name().touched()
+                      ? 'signup-name-error'
+                      : null
+                  "
+                />
+              </div>
+              @if (createUserForm.name().errors().length && createUserForm.name().touched()) {
+              <div class="field-error fade-in" id="signup-name-error" role="alert">
+                @for (error of createUserForm.name().errors(); track error.kind) {
+                <p>{{ error.message || 'Campo invalido' }}</p>
+                }
+              </div>
+              }
+            </div>
+
+            <div class="field">
+              <label for="signup-email">E-mail</label>
+              <div class="input-wrap">
+                <input
+                  id="signup-email"
+                  type="email"
+                  placeholder="seu@email.com"
+                  autocomplete="email"
+                  [field]="createUserForm.email"
+                  [class.error]="
+                    createUserForm.email().errors().length && createUserForm.email().touched()
+                  "
+                  [attr.aria-invalid]="
+                    createUserForm.email().errors().length && createUserForm.email().touched()
+                      ? 'true'
+                      : 'false'
+                  "
+                  [attr.aria-describedby]="
+                    createUserForm.email().errors().length && createUserForm.email().touched()
+                      ? 'signup-email-error'
+                      : null
+                  "
+                />
+              </div>
+              @if (createUserForm.email().errors().length && createUserForm.email().touched()) {
+              <div class="field-error fade-in" id="signup-email-error" role="alert">
+                @for (error of createUserForm.email().errors(); track error.kind) {
+                <p>{{ error.message || 'Campo invalido' }}</p>
+                }
+              </div>
+              }
+            </div>
+
+            <div class="field">
+              <label for="signup-password">Senha</label>
+              <div class="input-wrap">
+                <input
+                  id="signup-password"
+                  [type]="showSignupPassword() ? 'text' : 'password'"
+                  [placeholder]="showSignupPassword() ? 'sua senha' : '********'"
+                  autocomplete="new-password"
+                  [field]="createUserForm.password"
+                  [class.error]="
+                    createUserForm.password().errors().length && createUserForm.password().touched()
+                  "
+                  [attr.aria-invalid]="
+                    createUserForm.password().errors().length && createUserForm.password().touched()
+                      ? 'true'
+                      : 'false'
+                  "
+                  [attr.aria-describedby]="
+                    createUserForm.password().errors().length && createUserForm.password().touched()
+                      ? 'signup-password-error'
+                      : null
+                  "
+                />
+                <button
+                  type="button"
+                  class="toggle-password"
+                  [attr.aria-label]="showSignupPassword() ? 'Ocultar senha' : 'Mostrar senha'"
+                  (click)="toggleSignupPassword()"
+                  [disabled]="isLoading()"
+                >
+                  <img
+                    [src]="showSignupPassword() ? 'icons/eye-off.svg' : 'icons/eye.svg'"
+                    alt=""
+                  />
+                </button>
+              </div>
+              @if (createUserForm.password().errors().length && createUserForm.password().touched())
+              {
+              <div class="field-error fade-in" id="signup-password-error" role="alert">
+                @for (error of createUserForm.password().errors(); track error.kind) {
+                <p>{{ error.message || 'Campo invalido' }}</p>
+                }
+              </div>
+              }
+            </div>
+
+            @if (errorMessage()) {
+            <div class="form-alert fade-in" role="alert">
+              <p>{{ errorMessage() }}</p>
+            </div>
+            }
+
+            <button class="submit-button" type="submit" [disabled]="!canSubmitSignup()">
+              @if (isLoading()) {
+              <span class="spinner" aria-hidden="true"></span>
+              Criando conta... } @else { Criar conta }
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

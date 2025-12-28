@@ -1,0 +1,11 @@
+<input
+  type="range"
+  class="slider"
+  [style.--progress]="progress + '%'"
+  [attr.min]="min"
+  [attr.max]="max"
+  [attr.step]="step"
+  [value]="value"
+  [disabled]="disabled"
+  (input)="onInput($event)"
+/>

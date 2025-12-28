@@ -1,0 +1,187 @@
+<audio #audio class="player__audio"></audio>
+@if (isLoading) {
+<song-detail-skeleton />
+} @else { @if (!song) {
+<div class="player-empty">
+  <div class="player-empty__icon">
+    <img class="icon-img" src="icons/music.svg" width="40" height="40" alt="" aria-hidden="true" />
+  </div>
+  <h2 class="player-empty__title font-display">Nenhuma música selecionada</h2>
+  <p class="player-empty__text">Selecione uma música da lista para começar a ouvir</p>
+</div>
+} @if (song) {
+<div class="player animate-fade-in">
+  @if (showBack) {
+  <div class="player__back">
+    <app-button variant="ghost" size="sm" (click)="back.emit()">
+      <img
+        class="icon-img"
+        src="icons/arrow-left.svg"
+        width="16"
+        height="16"
+        alt=""
+        aria-hidden="true"
+      />
+      Voltar
+    </app-button>
+  </div>
+  }
+  <div class="player__content scrollbar-thin">
+    <div class="player__art">
+      <img
+        [src]="song.thumbnail"
+        [alt]="'Capa de ' + song.title"
+        [class.player__art-image--playing]="isPlaying()"
+      />
+      @if (isPlaying()) {
+      <div class="player__art-ring"></div>
+      }
+    </div>
+    <div class="player__info">
+      <h1 class="font-display">{{ song.title }}</h1>
+      <p>{{ song.artist }}</p>
+    </div>
+    <p class="player__description">{{ song.description }}</p>
+    <div class="player__lyrics">
+      <app-button
+        variant="outline"
+        size="sm"
+        (click)="toggleLyrics()"
+        className="player__lyrics-toggle"
+      >
+        {{ showLyrics() ? 'Ocultar letra' : 'Ver letra' }}
+      </app-button>
+      @if (showLyrics()) {
+      <div class="player__lyrics-body animate-fade-in">
+        <pre class="player__lyrics-text">{{ song.lyrics }}</pre>
+      </div>
+      }
+    </div>
+  </div>
+  <div class="player__controls safe-bottom">
+    <div class="player__progress">
+      <slider
+        [value]="currentTime()"
+        [max]="song.duration"
+        [step]="1"
+        (valueChange)="seek($event)"
+      />
+      <div class="player__times">
+        <span>{{ formatDuration(math.floor(currentTime())) }}</span>
+        <span>{{ formatDuration(song.duration) }}</span>
+      </div>
+    </div>
+    <div class="player__main-controls">
+      <app-button
+        variant="icon"
+        size="icon"
+        [className]="isShuffle() ? 'player__muted player__control--active' : 'player__muted'"
+        (click)="toggleShuffle()"
+        aria-label="Modo aleatório"
+      >
+        <img
+          class="icon-img"
+          src="icons/shuffle.svg"
+          width="16"
+          height="16"
+          alt=""
+          aria-hidden="true"
+        />
+      </app-button>
+      <app-button
+        variant="icon"
+        size="icon"
+        (click)="onPrev()"
+        [disabled]="!canPrevious"
+        aria-label="Anterior"
+      >
+        <img
+          class="icon-img"
+          src="icons/skip-back.svg"
+          width="20"
+          height="20"
+          alt=""
+          aria-hidden="true"
+        />
+      </app-button>
+      <button
+        type="button"
+        class="player__play"
+        (click)="togglePlay()"
+        [disabled]="isLoadingAudio()"
+        [attr.aria-label]="isPlaying() ? 'Pausar' : 'Reproduzir'"
+      >
+        @if (isLoadingAudio()) {
+        <span class="player__spinner"></span>
+        } @else {
+        <img
+          class="icon-img"
+          [attr.src]="isPlaying() ? 'icons/pause.svg' : 'icons/play.svg'"
+          width="24"
+          height="24"
+          alt=""
+          aria-hidden="true"
+        />
+        }
+      </button>
+      <app-button
+        variant="icon"
+        size="icon"
+        (click)="onNext()"
+        [disabled]="!canNext"
+        aria-label="Próxima"
+      >
+        <img
+          class="icon-img"
+          src="icons/skip-forward.svg"
+          width="20"
+          height="20"
+          alt=""
+          aria-hidden="true"
+        />
+      </app-button>
+      <app-button
+        variant="icon"
+        size="icon"
+        [className]="isRepeat() ? 'player__muted player__control--active' : 'player__muted'"
+        (click)="toggleRepeat()"
+        aria-label="Repetir"
+      >
+        <img
+          class="icon-img"
+          src="icons/repeat.svg"
+          width="16"
+          height="16"
+          alt=""
+          aria-hidden="true"
+        />
+      </app-button>
+    </div>
+    <div class="player__volume">
+      <app-button
+        variant="icon"
+        size="icon-sm"
+        (click)="toggleMute()"
+        className="player__muted"
+        [attr.aria-label]="isMuted() ? 'Ativar som' : 'Silenciar'"
+      >
+        <img
+          class="icon-img"
+          [attr.src]="isMuted() || volume() === 0 ? 'icons/volume-x.svg' : 'icons/volume-2.svg'"
+          width="16"
+          height="16"
+          alt=""
+          aria-hidden="true"
+        />
+      </app-button>
+      <slider
+        [value]="isMuted() ? 0 : volume()"
+        [min]="0"
+        [max]="1"
+        [step]="0.01"
+        (valueChange)="changeVolume($event)"
+      />
+    </div>
+  </div>
+</div>
+} }

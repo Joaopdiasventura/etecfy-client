@@ -1,0 +1,103 @@
+<div class="home safe-top safe-bottom">
+  <header class="home__header">
+    <div class="home__brand">
+      <div class="home__logo">
+        <img
+          class="icon-img"
+          src="icons/music.svg"
+          width="20"
+          height="20"
+          alt=""
+          aria-hidden="true"
+        />
+      </div>
+      <h1 class="font-display">Etecfy</h1>
+    </div>
+    <div class="home__actions">
+      <theme-toggle />
+      @if (showAppDownload()) {
+      <a
+        class="home__apk-link"
+        href="/etecfy.apk"
+        download
+        aria-label="Baixar app"
+        title="Baixar app"
+      >
+        <img class="icon-img" src="icons/download.svg" width="18" height="18" alt="" />
+      </a>
+      }
+      @if (currentUser()) {
+      <app-button
+        variant="icon"
+        size="icon"
+        className="home__account"
+        (click)="showProfile.set(true)"
+        aria-label="Minha conta"
+      >
+        <img
+          class="icon-img"
+          src="icons/user.svg"
+          width="20"
+          height="20"
+          alt=""
+          aria-hidden="true"
+        />
+      </app-button>
+      } @else {
+      <a class="home__login-link" [routerLink]="['/user', 'access']">Entrar</a>
+      }
+    </div>
+  </header>
+  <main class="home__main">
+    <div class="home__desktop">
+      <section class="home__list">
+        <song-list
+          [selectedSongId]="selectedSong()?.id"
+          (selectSong)="handleSelectSong($event)"
+          (songsChange)="handleSongsChange($event)"
+          (filtersChange)="handleFiltersChange($event)"
+        />
+      </section>
+      <section class="home__player">
+        <song-player
+          [song]="selectedSong()"
+          [isLoading]="isLoadingSong()"
+          [playlist]="playlist()"
+          [currentIndex]="currentIndex()"
+          (playIndex)="handlePlayIndex($event)"
+          (loadMore)="handleLoadMore()"
+        />
+      </section>
+    </div>
+    <div class="home__mobile">
+      @if (!showPlayer()) {
+      <song-list
+        [selectedSongId]="selectedSong()?.id"
+        (selectSong)="handleSelectSong($event)"
+        (songsChange)="handleSongsChange($event)"
+        (filtersChange)="handleFiltersChange($event)"
+      />
+      } @else {
+      <section class="home__player">
+        <song-player
+          [song]="selectedSong()"
+          [isLoading]="isLoadingSong()"
+          [showBack]="true"
+          [playlist]="playlist()"
+          [currentIndex]="currentIndex()"
+          (back)="handleBack()"
+          (playIndex)="handlePlayIndex($event)"
+          (loadMore)="handleLoadMore()"
+        />
+      </section>
+      }
+    </div>
+  </main>
+  @if (currentUser()) {
+  <profile-panel
+    [currentUser]="currentUser()!"
+    [isOpen]="showProfile()"
+    (close)="showProfile.set(false)"
+  />
+  }
+</div>

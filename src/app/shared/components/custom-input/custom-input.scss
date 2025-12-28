@@ -1,0 +1,60 @@
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.input-control {
+  width: 100%;
+  height: 3rem;
+  border-radius: 0.75rem;
+  border: 1px solid hsl(var(--input));
+  background: hsl(var(--card));
+  padding: 0 1rem;
+  font-size: 1rem;
+  color: hsl(var(--foreground));
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-control::placeholder {
+  color: hsl(var(--muted-foreground));
+}
+
+.input-control:focus {
+  outline: none;
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.2);
+}
+
+.input-control:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.input-control--error {
+  border-color: hsl(var(--destructive));
+  box-shadow: 0 0 0 2px hsl(var(--destructive) / 0.2);
+}
+
+.input-control--with-icon-left {
+  padding-left: 2.5rem;
+}
+
+.input-control--with-icon-right {
+  padding-right: 2.5rem;
+}
+
+.input-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: hsl(var(--muted-foreground));
+  pointer-events: none;
+}
+
+.input-icon--left {
+  left: 0.85rem;
+}
+
+.input-icon--right {
+  right: 0.85rem;
+}

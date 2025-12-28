@@ -1,0 +1,25 @@
+.not-found {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: hsl(var(--muted));
+  text-align: center;
+  padding: 2rem;
+}
+
+.not-found__content h1 {
+  margin: 0 0 1rem;
+  font-size: 2.5rem;
+}
+
+.not-found__content p {
+  margin: 0 0 1rem;
+  color: hsl(var(--muted-foreground));
+  font-size: 1.25rem;
+}
+
+.not-found__link {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+}

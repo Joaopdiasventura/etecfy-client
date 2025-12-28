@@ -1,0 +1,38 @@
+.song-card-skeleton {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  background: hsl(var(--card));
+}
+
+.song-card-skeleton__cover {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 0.5rem;
+  flex-shrink: 0;
+}
+
+.song-card-skeleton__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.song-card-skeleton__line {
+  height: 0.75rem;
+  width: 75%;
+}
+
+.song-card-skeleton__line--short {
+  width: 50%;
+  height: 0.6rem;
+}
+
+.song-card-skeleton__duration {
+  width: 2.5rem;
+  height: 0.75rem;
+}

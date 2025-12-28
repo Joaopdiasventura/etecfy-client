@@ -1,0 +1,38 @@
+<div class="input-wrapper" [class.input-wrapper--has-icon]="icon">
+  @if (icon && iconPosition === 'left') {
+  <img
+    class="icon-img input-icon input-icon--left"
+    [attr.src]="'icons/' + icon + '.svg'"
+    width="16"
+    height="16"
+    alt=""
+    aria-hidden="true"
+  />
+  }
+  <input
+    class="input-control"
+    [class]="[
+      icon && iconPosition === 'left' ? 'input-control--with-icon-left' : '',
+      icon && iconPosition === 'right' ? 'input-control--with-icon-right' : '',
+      error ? 'input-control--error' : '',
+      className
+    ]"
+    [attr.id]="id"
+    [attr.type]="type"
+    [attr.placeholder]="placeholder"
+    [attr.autocomplete]="autocomplete"
+    [disabled]="disabled"
+    [value]="value"
+    (input)="onInput($event)"
+  />
+  @if (icon && iconPosition === 'right') {
+  <img
+    class="icon-img input-icon input-icon--right"
+    [attr.src]="'icons/' + icon + '.svg'"
+    width="16"
+    height="16"
+    alt=""
+    aria-hidden="true"
+  />
+  }
+</div>

@@ -1,0 +1,74 @@
+.song-list:host,
+:host {
+  display: block;
+  height: 100%;
+  min-height: 0;
+  flex: 1;
+}
+
+.song-list {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  flex: 1;
+}
+
+.song-list__filters {
+  padding: 1rem;
+  border-bottom: 1px solid hsl(var(--border));
+  display: grid;
+  gap: 0.75rem;
+}
+
+.song-list__search {
+  position: relative;
+}
+
+.song-list__clear {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: hsl(var(--muted-foreground));
+  transition: color 0.2s ease;
+}
+
+.song-list__clear:hover {
+  color: hsl(var(--foreground));
+}
+
+.song-list__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.song-list__content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  min-height: 0;
+}
+
+
+.song-list__empty {
+  text-align: center;
+  padding: 2rem 1rem;
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+}
+
+.song-list__error {
+  color: hsl(var(--destructive));
+  margin: 0;
+}
+
+.song-list__muted {
+  color: hsl(var(--muted-foreground));
+  margin: 0;
+}

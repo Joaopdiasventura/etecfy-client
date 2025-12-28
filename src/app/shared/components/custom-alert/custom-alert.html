@@ -1,0 +1,16 @@
+<div class="alert" [class]="['alert--' + type, className]" role="alert">
+  <img
+    class="icon-img alert__icon"
+    [attr.src]="'icons/' + iconName + '.svg'"
+    width="20"
+    height="20"
+    alt=""
+    aria-hidden="true"
+  />
+  <p class="alert__message">{{ message }}</p>
+  @if (close.observed) {
+  <button class="alert__close" type="button" (click)="close.emit()">
+    <img class="icon-img" src="icons/x.svg" width="16" height="16" alt="" aria-hidden="true" />
+  </button>
+  }
+</div>

@@ -1,0 +1,16 @@
+<app-button
+  variant="icon"
+  size="icon"
+  (click)="toggleTheme()"
+  [attr.aria-label]="theme === 'light' ? 'Ativar tema escuro' : 'Ativar tema claro'"
+  className="theme-toggle"
+>
+  <img
+    class="icon-img"
+    [attr.src]="theme === 'light' ? 'icons/moon.svg' : 'icons/sun.svg'"
+    width="20"
+    height="20"
+    alt=""
+    aria-hidden="true"
+  />
+</app-button>

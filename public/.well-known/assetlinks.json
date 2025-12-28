@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.etecfy.joaopdias",
+      "sha256_cert_fingerprints": [
+        "C1:D6:1D:E4:36:6F:E9:A7:3B:5D:67:D8:4A:E1:D2:7C:E0:E0:0E:AB:19:19:C1:71:41:48:06:9E:CF:D9:12:FD"
+      ]
+    }
+  }
+]

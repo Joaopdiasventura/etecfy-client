@@ -1,0 +1,88 @@
+<div class="song-list" [class]="className">
+  <div class="song-list__filters">
+    <div class="song-list__search">
+      <app-input
+        placeholder="Buscar músicas..."
+        [value]="searchQuery()"
+        icon="search"
+        className="song-list__search-input"
+        (valueChange)="searchQuery.set($event)"
+      />
+      @if (searchQuery()) {
+      <button
+        type="button"
+        class="song-list__clear"
+        (click)="clearSearch()"
+        aria-label="Limpar busca"
+      >
+        <img class="icon-img" src="icons/x.svg" width="16" height="16" alt="" aria-hidden="true" />
+      </button>
+      }
+    </div>
+
+    <app-button
+      variant="outline"
+      size="sm"
+      [className]="
+        showFilters()
+          ? 'song-list__filter-button song-list__filter-button--active'
+          : 'song-list__filter-button'
+      "
+      (click)="showFilters.set(!showFilters())"
+    >
+      <img
+        class="icon-img"
+        src="icons/filter.svg"
+        width="16"
+        height="16"
+        alt=""
+        aria-hidden="true"
+      />
+      Filtros
+    </app-button>
+
+    @if (showFilters()) {
+    <div class="song-list__chips animate-fade-in">
+      @for (option of orderOptions; track option) {
+      <app-button
+        [variant]="orderBy() === option ? 'default' : 'outline'"
+        size="sm"
+        (click)="orderBy.set(option)"
+        className="song-list__chip"
+      >
+        <img
+          class="icon-img"
+          src="icons/arrow-up-down.svg"
+          width="14"
+          height="14"
+          alt=""
+          aria-hidden="true"
+        />
+        {{ orderLabels[option] }}
+      </app-button>
+      }
+    </div>
+    }
+  </div>
+
+  <div class="song-list__content scrollbar-thin" (scroll)="onScroll($event)">
+    @if (isLoading()) { @for (i of [1,2,3,4,5,6]; track i) {
+    <song-card-skeleton />
+    } } @else { @if (error()) {
+    <div class="song-list__empty">
+      <p class="song-list__error">{{ error() }}</p>
+      <app-button variant="outline" (click)="loadSongs()">Tentar novamente</app-button>
+    </div>
+    } @if (!error() && songs().length === 0) {
+    <div class="song-list__empty">
+      <p class="song-list__muted">Nenhuma música encontrada</p>
+    </div>
+    } @for (song of songs(); track song) {
+    <song-card
+      [song]="song"
+      [isActive]="song.id === selectedSongId"
+      (select)="selectSong.emit(song)"
+    />
+    } }
+  </div>
+</div>
