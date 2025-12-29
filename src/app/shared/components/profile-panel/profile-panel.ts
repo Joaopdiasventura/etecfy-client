@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core';
 import { validateName, validateEmail } from '../../utils/validators';
 import { User } from '../../../core/models/user';
 import { UserService } from '../../../core/services/user/user.service';
@@ -7,8 +7,8 @@ import { CustomButton } from '../custom-button/custom-button';
 import { CustomInput } from '../custom-input/custom-input';
 import { CustomAlert } from '../custom-alert/custom-alert';
 import { form } from '@angular/forms/signals';
-import { UpdateUserDto } from '../../dto/user/update-user.dto';
 import { CreateUserDto } from '../../dto/user/create-user.dto';
+import { UpdateUserDto } from '../../dto/user/update-user.dto';
 
 @Component({
   selector: 'profile-panel',
@@ -16,7 +16,7 @@ import { CreateUserDto } from '../../dto/user/create-user.dto';
   templateUrl: './profile-panel.html',
   styleUrl: './profile-panel.scss',
 })
-export class ProfilePanel {
+export class ProfilePanel implements OnInit {
   @Input({ required: true }) public currentUser!: User;
 
   public readonly isLoading = signal(false);
@@ -37,7 +37,7 @@ export class ProfilePanel {
   readonly success = signal<string | null>(null);
   readonly showDeleteConfirm = signal(false);
 
-  private readonly updateUserDto = signal<CreateUserDto>({
+  private readonly updateUserDto = signal<UpdateUserDto>({
     name: '',
     email: '',
     password: '',
@@ -48,24 +48,32 @@ export class ProfilePanel {
   private readonly userService = inject(UserService);
   private readonly router = inject(Router);
 
+  public ngOnInit(): void {
+    this.updateUserDto.update((prev) => ({ ...prev, ...this.currentUser }));
+  }
+
   public updateProfile(event: Event) {
     event.preventDefault();
     this.error.set(null);
     this.success.set(null);
 
-    if (!validateName(this.updateUserDto().name))
-      return this.error.set('Nome deve ter pelo menos 2 caracteres');
+    const dto = { ...this.updateUserDto() };
+    const trimmedPassword = dto.password?.trim();
+    if (!trimmedPassword) delete dto.password;
+    else dto.password = trimmedPassword;
 
-    if (!validateEmail(this.updateUserDto().email)) return this.error.set('E-mail inválido');
+    if (!validateName(dto.name!)) return this.error.set('Nome deve ter pelo menos 2 caracteres');
 
-    if (this.updateUserDto().password) {
-      const message = this.getStrongPasswordErrorMessage(this.updateUserDto().password);
-      if (message) return this.error.set(message);
+    if (!validateEmail(dto.email!)) return this.error.set('E-mail inválido');
+
+    if (dto.password) {
+      const message = this.getStrongPasswordErrorMessage(dto.password);
+      if (message) this.error.set(message);
     }
 
     this.isLoading.set(true);
 
-    this.userService.update(this.updateUserDto()).subscribe({
+    this.userService.update(dto).subscribe({
       next: () => {
         this.updateUserDto.update((value) => ({ ...value, password: '' }));
         this.success.set('Conta atualizada com sucesso!');
@@ -102,4 +110,3 @@ export class ProfilePanel {
     return null;
   }
 }
-

@@ -35,7 +35,6 @@ export class HomePage implements OnInit {
   private readonly pageSize = 10;
 
   public ngOnInit(): void {
-    this.authService.disconnectUser();
     this.authService.$user.subscribe((u) => this.currentUser.set(u));
   }
 

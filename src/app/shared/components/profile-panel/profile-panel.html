@@ -46,9 +46,9 @@
         <label class="profile-panel__field">
           <span>Nome</span>
           <app-input
-            [value]="updateUserDorm.name().value()"
+            [value]="updateUserDorm.name!().value()"
             icon="user"
-            (valueChange)="updateUserDorm.name().value.set($event)"
+            (valueChange)="updateUserDorm.name!().value.set($event)"
             [disabled]="isLoading()"
           />
         </label>
@@ -57,9 +57,9 @@
           <span>E-mail</span>
           <app-input
             type="email"
-            [value]="updateUserDorm.email().value()"
+            [value]="updateUserDorm.email!().value()"
             icon="mail"
-            (valueChange)="updateUserDorm.email().value.set($event)"
+            (valueChange)="updateUserDorm.email!().value.set($event)"
             [disabled]="isLoading()"
           />
         </label>
@@ -69,9 +69,9 @@
           <app-input
             type="password"
             placeholder="Deixe em branco para manter"
-            [value]="updateUserDorm.password().value()"
+            [value]="updateUserDorm.password!().value()"
             icon="lock"
-            (valueChange)="updateUserDorm.password().value.set($event)"
+            (valueChange)="updateUserDorm.password!().value.set($event)"
             [disabled]="isLoading()"
           />
         </label>

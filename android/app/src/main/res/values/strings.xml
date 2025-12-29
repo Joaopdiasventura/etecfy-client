@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">etecfy</string>
-    <string name="title_activity_main">etecfy</string>
+    <string name="app_name">Etecfy</string>
+    <string name="title_activity_main">Etecfy</string>
     <string name="package_name">com.etecfy.joaopdias</string>
     <string name="custom_url_scheme">com.etecfy.joaopdias</string>
 </resources>
