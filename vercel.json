@@ -1,0 +1,24 @@
+{
+    "builds": [
+        {
+            "src": "api/function.mjs",
+            "use": "@vercel/node",
+            "config": {
+                "includeFiles": "dist/etecfy/**"
+            }
+        },
+        {
+            "src": "package.json",
+            "use": "@vercel/static-build",
+            "config": {
+                "distDir": "dist/etecfy/browser"
+            }
+        }
+    ],
+    "rewrites": [
+        {
+            "source": "/(.*)",
+            "destination": "/api/function.mjs"
+        }
+    ]
+}
