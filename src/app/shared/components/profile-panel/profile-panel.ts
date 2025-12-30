@@ -19,23 +19,23 @@ import { UpdateUserDto } from '../../dto/user/update-user.dto';
 export class ProfilePanel implements OnInit {
   @Input({ required: true }) public currentUser!: User;
 
-  public readonly isLoading = signal(false);
-
-  private readonly isOpenSignal = signal(false);
-
-  @Input() set isOpen(value: boolean) {
+  @Input({ required: false }) public set isOpen(value: boolean) {
     this.isOpenSignal.set(value);
   }
 
-  get isOpen() {
+  public get isOpen() {
     return this.isOpenSignal();
   }
 
-  @Output() close = new EventEmitter<void>();
+  @Output() public close = new EventEmitter<void>();
 
-  readonly error = signal<string | null>(null);
-  readonly success = signal<string | null>(null);
-  readonly showDeleteConfirm = signal(false);
+  public readonly isLoading = signal(false);
+
+  public readonly error = signal<string | null>(null);
+  public readonly success = signal<string | null>(null);
+  public readonly showDeleteConfirm = signal(false);
+
+  private readonly isOpenSignal = signal(false);
 
   private readonly updateUserDto = signal<UpdateUserDto>({
     name: '',
@@ -86,7 +86,7 @@ export class ProfilePanel implements OnInit {
     });
   }
 
-  confirmDelete() {
+  public confirmDelete() {
     this.userService.delete().subscribe({
       next: () => this.router.navigateByUrl('/user/access'),
       error: (err) => {
@@ -96,7 +96,7 @@ export class ProfilePanel implements OnInit {
     });
   }
 
-  logout() {
+  public logout() {
     this.router.navigateByUrl('/user/access');
   }
 

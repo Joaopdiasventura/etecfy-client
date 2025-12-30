@@ -7,16 +7,16 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrl: './custom-input.scss',
 })
 export class CustomInput {
-  @Input() public id?: string;
-  @Input() public type = 'text';
-  @Input() public placeholder = '';
-  @Input() public value = '';
-  @Input() public icon?: string;
-  @Input() public iconPosition: 'left' | 'right' = 'left';
-  @Input() public error = false;
-  @Input() public disabled = false;
-  @Input() public autocomplete?: string;
-  @Input() public className = '';
+  @Input({ required: false }) public id?: string;
+  @Input({ required: false }) public type = 'text';
+  @Input({ required: false }) public placeholder = '';
+  @Input({ required: false }) public value = '';
+  @Input({ required: false }) public icon?: string;
+  @Input({ required: false }) public iconPosition: 'left' | 'right' = 'left';
+  @Input({ required: false }) public error = false;
+  @Input({ required: false }) public disabled = false;
+  @Input({ required: false }) public autocomplete?: string;
+  @Input({ required: false }) public className = '';
   @Output() public valueChange = new EventEmitter<string>();
 
   public onInput(event: Event) {

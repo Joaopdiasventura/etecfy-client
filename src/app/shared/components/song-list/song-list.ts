@@ -41,8 +41,8 @@ const ORDER_LABELS: Record<OrderByOption, string> = {
   styleUrl: './song-list.scss',
 })
 export class SongList implements OnDestroy {
-  @Input() public selectedSongId?: number;
-  @Input() public className = '';
+  @Input({ required: false }) public selectedSongId?: number;
+  @Input({ required: false }) public className = '';
   @Output() public selectSong = new EventEmitter<Song>();
   @Output() public songsChange = new EventEmitter<Song[]>();
   @Output() public filtersChange = new EventEmitter<{ query: string; orderBy: OrderByOption }>();
@@ -114,6 +114,20 @@ export class SongList implements OnDestroy {
     this.searchQuery.set('');
   }
 
+  public onScroll(event: Event): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    const target = event.target as HTMLDivElement;
+    if (!target) return;
+    if (target.scrollTop > 0 && !this.hasUserScrolled()) {
+      this.hasUserScrolled.set(true);
+    }
+    const nearBottom =
+      target.scrollTop + target.clientHeight >= target.scrollHeight - 24;
+    if (nearBottom && this.hasUserScrolled() && this.songs().length >= this.pageSize) {
+      this.loadMore();
+    }
+  }
+
   private loadMore(): void {
     if (this.isLoading() || this.isLoadingMore() || !this.hasMore()) return;
     this.isLoadingMore.set(true);
@@ -136,23 +150,11 @@ export class SongList implements OnDestroy {
           this.isLoadingMore.set(false);
         },
         error: () => {
-          this.error.set('Erro ao carregar mÇ§sicas. Tente novamente.');
+          this.error.set('Erro ao carregar mÇÎ¶õsicas. Tente novamente.');
           this.isLoadingMore.set(false);
         },
       });
   }
-
-  public onScroll(event: Event): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-    const target = event.target as HTMLDivElement;
-    if (!target) return;
-    if (target.scrollTop > 0 && !this.hasUserScrolled()) {
-      this.hasUserScrolled.set(true);
-    }
-    const nearBottom =
-      target.scrollTop + target.clientHeight >= target.scrollHeight - 24;
-    if (nearBottom && this.hasUserScrolled() && this.songs().length >= this.pageSize) {
-      this.loadMore();
-    }
-  }
 }
+
+

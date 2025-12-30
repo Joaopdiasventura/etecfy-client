@@ -9,12 +9,12 @@ type AlertType = 'error' | 'success' | 'info' | 'warning';
   styleUrl: './custom-alert.scss',
 })
 export class CustomAlert {
-  @Input() type: AlertType = 'info';
-  @Input() message = '';
-  @Input() className = '';
-  @Output() close = new EventEmitter<void>();
+  @Input({ required: false }) public type: AlertType = 'info';
+  @Input({ required: false }) public message = '';
+  @Input({ required: false }) public className = '';
+  @Output() public close = new EventEmitter<void>();
 
-  get iconName() {
+  public get iconName() {
     switch (this.type) {
       case 'error':
         return 'x-circle';

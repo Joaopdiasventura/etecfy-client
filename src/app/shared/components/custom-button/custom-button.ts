@@ -19,10 +19,10 @@ type ButtonSize = 'default' | 'sm' | 'lg' | 'icon' | 'icon-sm' | 'icon-lg';
   styleUrl: './custom-button.scss',
 })
 export class CustomButton {
-  @Input() public variant: ButtonVariant = 'default';
-  @Input() public size: ButtonSize = 'default';
-  @Input() public type: 'button' | 'submit' | 'reset' = 'button';
-  @Input() public disabled = false;
-  @Input() public loading = false;
-  @Input() public className = '';
+  @Input({ required: false }) public variant: ButtonVariant = 'default';
+  @Input({ required: false }) public size: ButtonSize = 'default';
+  @Input({ required: false }) public type: 'button' | 'submit' | 'reset' = 'button';
+  @Input({ required: false }) public disabled = false;
+  @Input({ required: false }) public loading = false;
+  @Input({ required: false }) public className = '';
 }

@@ -11,7 +11,7 @@ import { formatDuration } from '../../utils/validators';
 })
 export class SongCard {
   @Input({ required: true }) public song!: Song;
-  @Input() public isActive = false;
+  @Input({ required: false }) public isActive = false;
   @Output() public select = new EventEmitter<void>();
 
   public formatDuration = formatDuration;

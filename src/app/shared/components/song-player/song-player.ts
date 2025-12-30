@@ -32,17 +32,33 @@ import { MediaSession as NativeMediaSession } from '@capgo/capacitor-media-sessi
 })
 export class SongPlayer implements AfterViewInit, OnChanges, OnDestroy {
   private static activeAudio: HTMLAudioElement | null = null;
-  @Input() isLoading = false;
-  @Input() showBack = false;
-  @Input() compact = false;
-  @Input() playlist: Song[] | null = null;
-  @Input() currentIndex = -1;
-  @Output() back = new EventEmitter<void>();
-  @Output() expand = new EventEmitter<void>();
-  @Output() playIndex = new EventEmitter<number>();
-  @Output() loadMore = new EventEmitter<void>();
+  @Input({ required: false }) public isLoading = false;
+  @Input({ required: false }) public showBack = false;
+  @Input({ required: false }) public compact = false;
+  @Input({ required: false }) public playlist: Song[] | null = null;
+  @Input({ required: false }) public currentIndex = -1;
+  @Input({ required: false }) public set song(value: Song | null) {
+    const prev = this.songSignal();
+    this.songSignal.set(value);
+    if (value && (!prev || prev.id !== value.id)) {
+      this.pendingSeekTime = null;
+      this.isSeeking = false;
+      this.currentTime.set(0);
+      if (this.audio) this.audio.currentTime = 0;
+    }
+    this.tryLoadSong();
+  }
 
-  @ViewChild('audio', { static: false }) audioRef?: ElementRef<HTMLAudioElement>;
+  public get song() {
+    return this.songSignal();
+  }
+
+  @Output() public back = new EventEmitter<void>();
+  @Output() public expand = new EventEmitter<void>();
+  @Output() public playIndex = new EventEmitter<number>();
+  @Output() public loadMore = new EventEmitter<void>();
+
+  @ViewChild('audio', { static: false }) private audioRef?: ElementRef<HTMLAudioElement>;
 
   public readonly isPlaying = signal(false);
   public readonly currentTime = signal(0);
@@ -54,11 +70,9 @@ export class SongPlayer implements AfterViewInit, OnChanges, OnDestroy {
   public readonly isLoadingAudio = signal(false);
   public readonly showLyrics = signal(false);
   public readonly math = Math;
+  public readonly formatDuration = formatDuration;
 
   private readonly songSignal = signal<Song | null>(null);
-  private readonly platformId = inject(PLATFORM_ID);
-  private readonly songChunkService = inject(SongChunkService);
-  private readonly hostRef = inject(ElementRef<HTMLElement>);
 
   private audio?: HTMLAudioElement;
   private mediaSource?: MediaSource;
@@ -86,20 +100,34 @@ export class SongPlayer implements AfterViewInit, OnChanges, OnDestroy {
   private mediaSessionInitialized = false;
   private nativeSessionInitialized = false;
 
-  @Input() public set song(value: Song | null) {
-    const prev = this.songSignal();
-    this.songSignal.set(value);
-    if (value && (!prev || prev.id !== value.id)) {
-      this.pendingSeekTime = null;
-      this.isSeeking = false;
-      this.currentTime.set(0);
-      if (this.audio) this.audio.currentTime = 0;
-    }
-    this.tryLoadSong();
-  }
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly songChunkService = inject(SongChunkService);
+  private readonly hostRef = inject(ElementRef<HTMLElement>);
 
-  public get song() {
-    return this.songSignal();
+  public ngOnChanges(): void {
+    const len = this.playlist?.length ?? 0;
+    this.rebuildOrder();
+    if (this.pendingAdvanceAfterLoad) {
+      if (len > this.lastPlaylistLength) {
+        this.noMoreAfterLoad = false;
+        const nextIndex =
+          this.pendingAdvanceDirection === 'prev'
+            ? this.computePrevIndex()
+            : this.computeNextIndex();
+        this.pendingAdvanceAfterLoad = false;
+        this.pendingAdvanceDirection = null;
+        if (nextIndex != null) {
+          this.playIndex.emit(nextIndex);
+        }
+      } else {
+        this.noMoreAfterLoad = true;
+        this.pendingAdvanceAfterLoad = false;
+        this.pendingAdvanceDirection = null;
+      }
+    } else if (len > this.lastPlaylistLength) {
+      this.noMoreAfterLoad = false;
+    }
+    this.lastPlaylistLength = len;
   }
 
   public ngAfterViewInit(): void {
@@ -233,32 +261,16 @@ export class SongPlayer implements AfterViewInit, OnChanges, OnDestroy {
     this.showLyrics.update((prev) => !prev);
   }
 
-  public formatDuration = formatDuration;
+  public get canNext(): boolean {
+    if (this.computeNextIndex() !== null) return true;
+    if (this.pendingAdvanceAfterLoad) return false;
+    return !this.noMoreAfterLoad;
+  }
 
-  public ngOnChanges(): void {
-    const len = this.playlist?.length ?? 0;
-    this.rebuildOrder();
-    if (this.pendingAdvanceAfterLoad) {
-      if (len > this.lastPlaylistLength) {
-        this.noMoreAfterLoad = false;
-        const nextIndex =
-          this.pendingAdvanceDirection === 'prev'
-            ? this.computePrevIndex()
-            : this.computeNextIndex();
-        this.pendingAdvanceAfterLoad = false;
-        this.pendingAdvanceDirection = null;
-        if (nextIndex != null) {
-          this.playIndex.emit(nextIndex);
-        }
-      } else {
-        this.noMoreAfterLoad = true;
-        this.pendingAdvanceAfterLoad = false;
-        this.pendingAdvanceDirection = null;
-      }
-    } else if (len > this.lastPlaylistLength) {
-      this.noMoreAfterLoad = false;
-    }
-    this.lastPlaylistLength = len;
+  public get canPrevious(): boolean {
+    if (!this.audio) return this.computePrevIndex() !== null;
+    if (this.audio.currentTime > 3) return true;
+    return this.computePrevIndex() !== null;
   }
 
   private tryLoadSong(): void {
@@ -443,18 +455,6 @@ export class SongPlayer implements AfterViewInit, OnChanges, OnDestroy {
     if (prevPos >= 0) return this.order[prevPos];
     if (this.isRepeat()) return this.order[this.order.length - 1] ?? null;
     return null;
-  }
-
-  public get canNext(): boolean {
-    if (this.computeNextIndex() !== null) return true;
-    if (this.pendingAdvanceAfterLoad) return false;
-    return !this.noMoreAfterLoad;
-  }
-
-  public get canPrevious(): boolean {
-    if (!this.audio) return this.computePrevIndex() !== null;
-    if (this.audio.currentTime > 3) return true;
-    return this.computePrevIndex() !== null;
   }
 
   private teardownMediaPipeline(): void {

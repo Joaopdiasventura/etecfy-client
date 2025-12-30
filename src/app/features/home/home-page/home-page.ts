@@ -27,12 +27,13 @@ export class HomePage implements OnInit {
   public readonly currentIndex = signal(-1);
   public readonly showAppDownload = computed(() => !Capacitor.isNativePlatform());
 
-  private readonly authService = inject(AuthService);
-  private readonly songService = inject(SongService);
   private lastQuery = '';
   private lastOrderBy = 'title:asc';
   private page = 1;
   private readonly pageSize = 10;
+
+  private readonly authService = inject(AuthService);
+  private readonly songService = inject(SongService);
 
   public ngOnInit(): void {
     this.authService.$user.subscribe((u) => this.currentUser.set(u));
@@ -94,7 +95,7 @@ export class HomePage implements OnInit {
     });
   }
 
-  handleBack() {
+  public handleBack() {
     this.showPlayer.set(false);
   }
 

@@ -9,9 +9,9 @@ import { CustomButton } from '../custom-button/custom-button';
   styleUrl: './theme-toggle.scss',
 })
 export class ThemeToggle implements OnInit {
-  private readonly platformId = inject(PLATFORM_ID);
-
   public theme: 'dark' | 'light' = 'light';
+
+  private readonly platformId = inject(PLATFORM_ID);
 
   public ngOnInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
