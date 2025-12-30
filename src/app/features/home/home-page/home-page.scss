@@ -169,9 +169,40 @@
   .home__mobile {
     display: flex;
     flex: 1;
+    position: relative;
   }
 
   .home__list {
     width: 100%;
+  }
+
+  .home__mobile--mini {
+    padding-bottom: 5rem;
+  }
+
+  .home__list--hidden {
+    display: none;
+  }
+
+  .home__player--mobile {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 45;
+    height: 4.75rem;
+    background: hsl(var(--background));
+    border-top: 1px solid hsl(var(--border));
+  }
+
+  .home__player--mobile.home__player--expanded {
+    top: 0;
+    bottom: 0;
+    height: auto;
+    z-index: 60;
+  }
+
+  .home__player--hidden {
+    display: none;
   }
 }

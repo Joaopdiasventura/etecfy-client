@@ -69,28 +69,33 @@
         />
       </section>
     </div>
-    <div class="home__mobile">
-      @if (!showPlayer()) {
-      <song-list
-        [selectedSongId]="selectedSong()?.id"
-        (selectSong)="handleSelectSong($event)"
-        (songsChange)="handleSongsChange($event)"
-        (filtersChange)="handleFiltersChange($event)"
-      />
-      } @else {
-      <section class="home__player">
+    <div class="home__mobile" [class.home__mobile--mini]="!showPlayer() && !!selectedSong()">
+      <section class="home__list" [class.home__list--hidden]="showPlayer()">
+        <song-list
+          [selectedSongId]="selectedSong()?.id"
+          (selectSong)="handleSelectSong($event)"
+          (songsChange)="handleSongsChange($event)"
+          (filtersChange)="handleFiltersChange($event)"
+        />
+      </section>
+      <section
+        class="home__player home__player--mobile"
+        [class.home__player--expanded]="showPlayer()"
+        [class.home__player--hidden]="!selectedSong()"
+      >
         <song-player
           [song]="selectedSong()"
           [isLoading]="isLoadingSong()"
-          [showBack]="true"
+          [showBack]="showPlayer()"
+          [compact]="!showPlayer()"
           [playlist]="playlist()"
           [currentIndex]="currentIndex()"
           (back)="handleBack()"
+          (expand)="showPlayer.set(true)"
           (playIndex)="handlePlayIndex($event)"
           (loadMore)="handleLoadMore()"
         />
       </section>
-      }
     </div>
   </main>
   @if (currentUser()) {

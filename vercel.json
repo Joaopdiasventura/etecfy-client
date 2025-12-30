@@ -15,10 +15,13 @@
             }
         }
     ],
-    "rewrites": [
+    "routes": [
         {
-            "source": "/(.*)",
-            "destination": "/api/function.mjs"
+            "handle": "filesystem"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/api/function.mjs"
         }
     ]
 }

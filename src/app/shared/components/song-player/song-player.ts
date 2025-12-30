@@ -34,9 +34,11 @@ export class SongPlayer implements AfterViewInit, OnChanges, OnDestroy {
   private static activeAudio: HTMLAudioElement | null = null;
   @Input() isLoading = false;
   @Input() showBack = false;
+  @Input() compact = false;
   @Input() playlist: Song[] | null = null;
   @Input() currentIndex = -1;
   @Output() back = new EventEmitter<void>();
+  @Output() expand = new EventEmitter<void>();
   @Output() playIndex = new EventEmitter<number>();
   @Output() loadMore = new EventEmitter<void>();
 
@@ -645,6 +647,7 @@ export class SongPlayer implements AfterViewInit, OnChanges, OnDestroy {
 
   private isVisible(): boolean {
     const host = this.hostRef.nativeElement;
+    if (this.compact) return true;
     return host.isConnected && host.getClientRects().length > 0;
   }
 
