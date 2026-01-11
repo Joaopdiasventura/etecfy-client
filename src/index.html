@@ -14,8 +14,23 @@
     <link rel="icon" type="image/svg+xml" href="/icons/music.svg" />
     <link rel="apple-touch-icon" href="/icons/music.svg" />
     <link rel="manifest" href="/manifest.webmanifest" />
-    <link href="https://fonts.cdnfonts.com/css/azonix" rel="stylesheet" />
-    <link href="https://fonts.cdnfonts.com/css/quicksand" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.cdnfonts.com" crossorigin />
+    <link
+      rel="preload"
+      href="https://fonts.cdnfonts.com/css/azonix"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <link
+      rel="preload"
+      href="https://fonts.cdnfonts.com/css/quicksand"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link href="https://fonts.cdnfonts.com/css/azonix" rel="stylesheet" />
+      <link href="https://fonts.cdnfonts.com/css/quicksand" rel="stylesheet" />
+    </noscript>
     <script>
       (function () {
         try {

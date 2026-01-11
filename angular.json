@@ -44,7 +44,7 @@
           "configurations": {
             "production": {
               "define": {
-                "API_URL": "'https://etecfy-server.onrender.com'"
+                "API_URL": "'https://etecfy-server.fly.dev'"
               },
               "budgets": [
                 {

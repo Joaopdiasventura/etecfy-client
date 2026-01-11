@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, HostBinding, Input } from '@angular/core';
 
 type ButtonVariant =
   | 'default'
@@ -25,4 +25,6 @@ export class CustomButton {
   @Input({ required: false }) public disabled = false;
   @Input({ required: false }) public loading = false;
   @Input({ required: false }) public className = '';
+  @Input({ alias: 'aria-label', required: false }) public ariaLabel: string | null = null;
+  @HostBinding('attr.aria-label') public hostAriaLabel: string | null = null;
 }

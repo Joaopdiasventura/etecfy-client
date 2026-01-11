@@ -2,6 +2,7 @@
   class="btn"
   [class]="['btn--variant-' + variant, 'btn--size-' + size, className]"
   [attr.type]="type"
+  [attr.aria-label]="ariaLabel || null"
   [disabled]="disabled || loading"
 >
   @if (loading) {

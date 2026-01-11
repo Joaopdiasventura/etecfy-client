@@ -9,7 +9,7 @@
   />
   <p class="alert__message">{{ message }}</p>
   @if (close.observed) {
-  <button class="alert__close" type="button" (click)="close.emit()">
+  <button class="alert__close" type="button" (click)="close.emit()" aria-label="Fechar alerta">
     <img class="icon-img" src="icons/x.svg" width="16" height="16" alt="" aria-hidden="true" />
   </button>
   }
