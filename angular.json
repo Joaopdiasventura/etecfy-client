@@ -44,7 +44,7 @@
           "configurations": {
             "production": {
               "define": {
-                "API_URL": "'https://api.etecfy.joaopdias.dev.br'"
+                "API_URL": "'https://api-etecfy.joaopdias.dev.br'"
               },
               "budgets": [
                 {
